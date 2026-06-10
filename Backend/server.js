@@ -17,7 +17,7 @@ const app = express();
 
 const allowedOrigins = [
     "http://localhost:3000",
-    "https://frolicking-moonbeam-baa0b9.netlify.app/"
+    "https://frolicking-moonbeam-baa0b9.netlify.app"
 ];
 
 app.use(cors({
