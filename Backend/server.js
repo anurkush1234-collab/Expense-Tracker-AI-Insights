@@ -14,7 +14,23 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+
+const allowedOrigins = [
+    "http://localhost:3000",
+    "https://frolicking-moonbeam-baa0b9.netlify.app/"
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
+
 app.use(express.json());
 
 // DB Connection
