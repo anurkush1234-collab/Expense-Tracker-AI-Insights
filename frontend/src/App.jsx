@@ -50,7 +50,7 @@ function App() {
 
     try {
       if (isLogin) {
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
+        const res = await axios.post("https://expense-tracker-ai-insights-2.onrender.com/api/auth/login", {
           email: authForm.email,
           password: authForm.password,
         });
@@ -58,7 +58,7 @@ function App() {
         localStorage.setItem("token", res.data.token);
         setUser(res.data.token);
       } else {
-        await axios.post("http://localhost:5000/api/auth/register", authForm);
+        await axios.post("https://expense-tracker-ai-insights-2.onrender.com/api/auth/register", authForm);
         alert("Signup successful! Login now");
         setIsLogin(true);
       }
@@ -75,12 +75,12 @@ function App() {
 
   // ================= FETCH =================
   const fetchDashboard = async () => {
-    const res = await axios.get("http://localhost:5000/api/dashboard", config);
+    const res = await axios.get("https://expense-tracker-ai-insights-2.onrender.com/api/dashboard", config);
     setDashboard(res.data);
   };
 
   const fetchTransactions = async () => {
-    const res = await axios.get("http://localhost:5000/api/transactions", config);
+    const res = await axios.get("https://expense-tracker-ai-insights-2.onrender.com/api/transactions", config);
     setTransactions(res.data);
   };
 
@@ -105,14 +105,14 @@ function App() {
     try {
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/transactions/${editingId}`,
+          `https://expense-tracker-ai-insights-2.onrender.com/api/transactions/${editingId}`,
           payload,
           config
         );
         setEditingId(null);
       } else {
         await axios.post(
-          "http://localhost:5000/api/transactions",
+          "https://expense-tracker-ai-insights-2.onrender.com/api/transactions",
           payload,
           config
         );
@@ -135,7 +135,7 @@ function App() {
   // ================= DELETE =================
   const deleteTransaction = async (id) => {
     await axios.delete(
-      `http://localhost:5000/api/transactions/${id}`,
+      `https://expense-tracker-ai-insights-2.onrender.com/api/transactions/${id}`,
       config
     );
 
