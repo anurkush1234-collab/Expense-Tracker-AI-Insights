@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 function App() {
   const [transactions, setTransactions] = useState([]);
@@ -37,7 +31,6 @@ function App() {
   const [user, setUser] = useState(localStorage.getItem("token"));
   const token = localStorage.getItem("token");
 
-  // ✅ FIXED AUTH HEADER
   const config = {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
@@ -50,15 +43,21 @@ function App() {
 
     try {
       if (isLogin) {
-        const res = await axios.post("https://expense-tracker-ai-insights-2.onrender.com/api/auth/login", {
-          email: authForm.email,
-          password: authForm.password,
-        });
+        const res = await axios.post(
+          "https://expense-tracker-ai-insights-2.onrender.com/api/auth/login",
+          {
+            email: authForm.email,
+            password: authForm.password,
+          }
+        );
 
         localStorage.setItem("token", res.data.token);
         setUser(res.data.token);
       } else {
-        await axios.post("https://expense-tracker-ai-insights-2.onrender.com/api/auth/register", authForm);
+        await axios.post(
+          "https://expense-tracker-ai-insights-2.onrender.com/api/auth/register",
+          authForm
+        );
         alert("Signup successful! Login now");
         setIsLogin(true);
       }
@@ -75,12 +74,18 @@ function App() {
 
   // ================= FETCH =================
   const fetchDashboard = async () => {
-    const res = await axios.get("https://expense-tracker-ai-insights-2.onrender.com/api/dashboard", config);
+    const res = await axios.get(
+      "https://expense-tracker-ai-insights-2.onrender.com/api/dashboard",
+      config
+    );
     setDashboard(res.data);
   };
 
   const fetchTransactions = async () => {
-    const res = await axios.get("https://expense-tracker-ai-insights-2.onrender.com/api/transactions", config);
+    const res = await axios.get(
+      "https://expense-tracker-ai-insights-2.onrender.com/api/transactions",
+      config
+    );
     setTransactions(res.data);
   };
 
@@ -118,12 +123,7 @@ function App() {
         );
       }
 
-      setForm({
-        type: "expense",
-        amount: "",
-        category: "",
-        description: "",
-      });
+      setForm({ type: "expense", amount: "", category: "", description: "" });
 
       fetchDashboard();
       fetchTransactions();
@@ -191,8 +191,8 @@ function App() {
     );
   }
 
-  // ================= PIE CHART FIX =================
-  const expenseData = transactions.filter(t => t.type === "expense");
+  // ================= PIE CHART =================
+  const expenseData = transactions.filter((t) => t.type === "expense");
 
   const expenseByCategory = expenseData.reduce((acc, curr) => {
     const key = (curr.category || "other").toLowerCase().trim();
@@ -211,7 +211,6 @@ function App() {
   return (
     <div style={styles.app}>
       <div style={styles.container}>
-
         <div style={styles.header}>
           <h1>💰 Expense Tracker</h1>
           <button onClick={logout} style={styles.logoutBtn}>
@@ -238,43 +237,19 @@ function App() {
         </div>
 
         {/* INSIGHT */}
-        <div style={{
-          marginTop: "20px",
-          background: "#fff3cd",
-          padding: "15px",
-          borderRadius: "10px",
-          textAlign: "center",
-          fontWeight: "bold",
-        }}>
+        <div style={styles.insightBox}>
           AI Insight: {dashboard.insight}
         </div>
 
         {/* PIE CHART */}
-        <div style={{
-          background: "white",
-          padding: "20px",
-          marginTop: "20px",
-          borderRadius: "10px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}>
+        <div style={styles.chartBox}>
           <h2>📊 Expense Analysis</h2>
-
           <PieChart width={400} height={300}>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              dataKey="value"
-              label
-            >
-              {pieData.map((entry, index) => (
+            <Pie data={pieData} cx="50%" cy="50%" outerRadius={100} dataKey="value" label>
+              {pieData.map((_, index) => (
                 <Cell key={index} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-
             <Tooltip />
             <Legend />
           </PieChart>
@@ -288,9 +263,7 @@ function App() {
             <select
               style={styles.input}
               value={form.type}
-              onChange={(e) =>
-                setForm({ ...form, type: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, type: e.target.value })}
             >
               <option value="expense">Expense</option>
               <option value="income">Income</option>
@@ -300,18 +273,14 @@ function App() {
               style={styles.input}
               placeholder="Amount"
               value={form.amount}
-              onChange={(e) =>
-                setForm({ ...form, amount: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, amount: e.target.value })}
             />
 
             <input
               style={styles.input}
               placeholder="Category"
               value={form.category}
-              onChange={(e) =>
-                setForm({ ...form, category: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
             />
 
             <input
@@ -366,7 +335,6 @@ function App() {
             </div>
           </div>
         ))}
-
       </div>
     </div>
   );
@@ -374,18 +342,18 @@ function App() {
 
 export default App;
 
-// ================= STYLES (FULL RESTORED) =================
+// ================= STYLES =================
 const styles = {
   app: {
-    background: "#f4f6f8",
+    background: "linear-gradient(135deg, #e0eafc, #cfdef3)",
     minHeight: "100vh",
-    fontFamily: "Arial",
+    fontFamily: "Segoe UI",
   },
 
   container: {
-    maxWidth: "900px",
+    maxWidth: "950px",
     margin: "auto",
-    padding: "20px",
+    padding: "25px",
   },
 
   header: {
@@ -398,8 +366,8 @@ const styles = {
     background: "#ff4d4d",
     color: "white",
     border: "none",
-    padding: "8px 15px",
-    borderRadius: "6px",
+    padding: "10px 16px",
+    borderRadius: "8px",
     cursor: "pointer",
   },
 
@@ -411,18 +379,34 @@ const styles = {
 
   card: {
     flex: 1,
+    padding: "18px",
+    borderRadius: "12px",
+    textAlign: "center",
+    boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
+  },
+
+  insightBox: {
+    marginTop: "20px",
+    background: "#fff3cd",
     padding: "15px",
     borderRadius: "10px",
     textAlign: "center",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+    fontWeight: "bold",
+  },
+
+  chartBox: {
     background: "white",
+    padding: "20px",
+    marginTop: "20px",
+    borderRadius: "12px",
+    textAlign: "center",
   },
 
   formBox: {
     marginTop: "30px",
     background: "white",
-    padding: "15px",
-    borderRadius: "10px",
+    padding: "20px",
+    borderRadius: "12px",
   },
 
   form: {
@@ -432,18 +416,18 @@ const styles = {
   },
 
   input: {
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
+    padding: "12px",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
     flex: 1,
   },
 
   addBtn: {
-    background: "#4caf50",
+    background: "linear-gradient(135deg, #4caf50, #2e7d32)",
     color: "white",
     border: "none",
-    padding: "10px",
-    borderRadius: "6px",
+    padding: "12px 16px",
+    borderRadius: "8px",
     cursor: "pointer",
   },
 
@@ -452,27 +436,25 @@ const styles = {
     justifyContent: "space-between",
     background: "white",
     padding: "15px",
-    marginTop: "10px",
-    borderRadius: "10px",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+    marginTop: "12px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
   },
 
   editBtn: {
     background: "#2196f3",
     color: "white",
     border: "none",
-    padding: "6px 10px",
-    borderRadius: "5px",
-    cursor: "pointer",
+    padding: "7px 12px",
+    borderRadius: "6px",
   },
 
   deleteBtn: {
     background: "#f44336",
     color: "white",
     border: "none",
-    padding: "6px 10px",
-    borderRadius: "5px",
-    cursor: "pointer",
+    padding: "7px 12px",
+    borderRadius: "6px",
   },
 
   authContainer: {
@@ -480,31 +462,29 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
-    background: "#f4f6f8",
+    background: "linear-gradient(135deg, #e0eafc, #cfdef3)",
   },
 
   authBox: {
     background: "white",
-    padding: "30px",
-    borderRadius: "10px",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-    width: "300px",
+    padding: "35px",
+    borderRadius: "12px",
+    width: "320px",
+    textAlign: "center",
   },
 
   primaryBtn: {
     width: "100%",
-    padding: "10px",
-    background: "#4caf50",
+    padding: "12px",
+    background: "linear-gradient(135deg, #4caf50, #2e7d32)",
     color: "white",
     border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
+    borderRadius: "8px",
   },
 
   link: {
-    marginTop: "10px",
-    color: "blue",
+    marginTop: "12px",
+    color: "#1976d2",
     cursor: "pointer",
-    textAlign: "center",
   },
 };
